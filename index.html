@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognizant Employee Onboarding Assistant</title>
+    <style>
+        :root {
+            --primary-blue: #0033A0;
+            --accent-blue: #0072CE;
+            --light-blue: #E6F0FA;
+            --neutral-gray: #F5F5F5;
+            --dark-gray: #333333;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--neutral-gray) 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--white);
+            box-shadow: 0 0 20px rgba(0, 51, 160, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .cognizant-logo {
+            height: 50px;
+            width: auto;
+            filter: brightness(0) invert(1); /* Makes the logo white */
+        }
+        
+        .cognizant-logo-with-name {
+            height: 60px;
+            width: auto;
+            filter: brightness(0) invert(1); /* Makes the logo white */
+        }
+        
+        .header-content {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .welcome-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-cognizant-logo {
+            height: 80px;
+            width: auto;
+            opacity: 0.8;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .clock {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .greeting {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: var(--neutral-gray);
+        }
+
+        .message {
+            margin-bottom: 20px;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message.assistant {
+            text-align: left;
+        }
+
+        .message-bubble {
+            display: inline-block;
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            line-height: 1.5;
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary-blue);
+            color: var(--white);
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.assistant .message-bubble {
+            background: var(--white);
+            color: var(--dark-gray);
+            border-bottom-left-radius: 5px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .video-container {
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .video-container video {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-area {
+            background: var(--white);
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-form {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.1);
+        }
+
+        .send-button {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .send-button:hover {
+            background: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 114, 206, 0.3);
+        }
+
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .clear-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: var(--white);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+            min-width: 100px;
+        }
+
+        .clear-button:hover {
+            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .clear-button:active {
+            transform: translateY(0);
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 15px 20px;
+            background: var(--white);
+            border-radius: 20px;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            max-width: 70%;
+            margin-bottom: 20px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--dark-gray);
+        }
+
+        .welcome-message h2 {
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            font-size: 2rem;
+        }
+
+        .welcome-message p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .quick-action-btn {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border: 2px solid var(--accent-blue);
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--accent-blue);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .status-indicator.online {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-indicator.offline {
+            background: #f44336;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .header { 
+                flex-direction: column; 
+                gap: 15px;
+                padding: 15px;
+            }
+            .header h1 { font-size: 1.8rem; }
+            .header-info { flex-direction: column; gap: 10px; }
+            .cognizant-logo { height: 40px; }
+            .welcome-cognizant-logo { height: 60px; }
+            .message-bubble { max-width: 85%; }
+            .input-form { 
+                flex-direction: column; 
+                gap: 10px;
+            }
+            .input-field { width: 100%; }
+            .send-button, .clear-button { 
+                width: 100%; 
+                justify-content: center;
+                min-width: auto;
+            }
+        }
+
+        /* Scrollbar styling */
+        .messages-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .messages-area::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+            border-radius: 10px;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-container">
+                <img src="Cognizant_logo_only.png" alt="Cognizant Logo" class="cognizant-logo">
+            </div>
+            <div class="header-content">
+                <h1>🤖 Employee Onboarding Assistant</h1>
+                <div class="header-info">
+                    <div class="greeting" id="greeting">Welcome to Cognizant!</div>
+                    <div class="clock" id="clock">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Indicator -->
+        <div class="status-indicator" id="status">
+            🔍 Checking connection...
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div class="messages-area" id="messagesArea">
+                <!-- Welcome Message -->
+                <div class="welcome-message">
+                    <div class="welcome-logo">
+                        <img src="Cognizant_logo_with_Name.png" alt="Cognizant" class="welcome-cognizant-logo">
+                    </div>
+                    <h2>👋 Welcome to Your Onboarding Journey!</h2>
+                    <p>I'm your Employee Onboarding Assistant. I'm here to help you with policies, procedures, and any questions about your journey at Cognizant.</p>
+                    <p>You can ask me about:</p>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="sendQuickMessage('Work from home policy')">🏠 Work from Home</button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('Tell me about TruTime')">⏰ TruTime</button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('Leave policies')">🏖️ Leave Policies</button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('POSH policy')">👥 POSH Policy</button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('6th day allowance')">💰 Allowances</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <form class="input-form" id="chatForm">
+                    <input 
+                        type="text" 
+                        class="input-field" 
+                        id="messageInput" 
+                        placeholder="Ask me anything about Cognizant policies..."
+                        autocomplete="off"
+                    >
+                    <button type="submit" class="send-button" id="sendButton">
+                        <span>Send</span>
+                        <span>📤</span>
+                    </button>
+                    <button type="button" class="clear-button" id="clearButton">
+                        <span>Clear</span>
+                        <span>🗑️</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // App State
+        let isConnected = false;
+        let sessionId = 'web_' + Date.now();
+        const API_BASE = 'http://employee-onboarding-assistant.ap-south-1.elasticbeanstalk.com';
+
+        // DOM Elements
+        const messagesArea = document.getElementById('messagesArea');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const clearButton = document.getElementById('clearButton');
+        const chatForm = document.getElementById('chatForm');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const statusIndicator = document.getElementById('status');
+        const clockElement = document.getElementById('clock');
+        const greetingElement = document.getElementById('greeting');
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            updateClock();
+            updateGreeting();
+            checkAPIHealth();
+            
+            // Update clock every second
+            setInterval(updateClock, 1000);
+            
+            // Check API health every 30 seconds
+            setInterval(checkAPIHealth, 30000);
+            
+            // Clear Chat Event Listener
+            clearButton.addEventListener('click', clearChat);
+            
+            // Focus input
+            messageInput.focus();
+        });
+
+        // Clock and Greeting Functions
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const dateString = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            clockElement.textContent = `${dateString} | ${timeString}`;
+        }
+
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            let greeting;
+            
+            if (hour < 12) {
+                greeting = "Good Morning! 🌅";
+            } else if (hour < 17) {
+                greeting = "Good Afternoon! ☀️";
+            } else if (hour < 22) {
+                greeting = "Good Evening! 🌆";
+            } else {
+                greeting = "Working late? 🌙";
+            }
+            
+            greetingElement.textContent = greeting;
+        }
+
+        // API Functions
+        async function checkAPIHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/`);
+                if (response.ok) {
+                    isConnected = true;
+                    statusIndicator.textContent = '🟢 Connected';
+                    statusIndicator.className = 'status-indicator online';
+                } else {
+                    throw new Error('API not responding');
+                }
+            } catch (error) {
+                isConnected = false;
+                statusIndicator.textContent = '🔴 Disconnected';
+                statusIndicator.className = 'status-indicator offline';
+                console.error('API Health Check Failed:', error);
+            }
+        }
+
+        async function sendMessage(message) {
+            if (!isConnected) {
+                addMessage('assistant', 'Sorry, I\'m currently offline. Please check your connection and try again.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: sessionId
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Send Message Error:', error);
+                throw error;
+            }
+        }
+
+        // UI Functions
+        function addMessage(type, content, showVideo = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+            
+            // Convert newlines to <br> tags and format text
+            const formattedContent = content
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            bubbleDiv.innerHTML = formattedContent;
+            
+            messageDiv.appendChild(bubbleDiv);
+            
+                    // Add video if needed
+        if (showVideo) {
+            const videoDiv = document.createElement('div');
+            videoDiv.className = 'video-container';
+            videoDiv.innerHTML = `
+                <div style="background: #f0f8ff; border: 2px solid #0033A0; border-radius: 10px; padding: 20px; margin: 10px 0;">
+                    <h4 style="color: #0033A0; margin: 0 0 10px 0;">🎥 TruTime Tutorial Video</h4>
+                    <p style="margin: 5px 0;">The TruTime tutorial video is available through these resources:</p>
+                    <div style="margin: 15px 0; padding: 10px; background: #e6f0fa; border-radius: 5px;">
+                        <p style="margin: 5px 0; font-weight: bold;">📁 Local Access:</p>
+                        <p style="margin: 5px 0; font-family: monospace; font-size: 14px;">Trutime Tutorial/Trutime Tuitorial.mp4</p>
+                    </div>
+                    <p style="margin: 15px 0;">
+                        <a href="https://be.cognizant.com/sites/global-human-resources/trutime/" 
+                           target="_blank" 
+                           style="background: #0033A0; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold; font-size: 16px;">
+                           🌐 Access Be.Cognizant Portal
+                        </a>
+                    </p>
+                    <p style="margin: 5px 0; font-size: 12px; color: #666; font-style: italic;">
+                        💡 Contact your IT team or supervisor for direct access to the tutorial video file.
+                    </p>
+                </div>
+            `;
+            messageDiv.appendChild(videoDiv);
+        }
+            
+            // Remove welcome message if this is the first real message
+            const welcomeMessage = messagesArea.querySelector('.welcome-message');
+            if (welcomeMessage && type === 'user') {
+                welcomeMessage.remove();
+            }
+            
+            messagesArea.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function showTyping() {
+            typingIndicator.style.display = 'block';
+            scrollToBottom();
+        }
+
+        function hideTyping() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => {
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            }, 100);
+        }
+
+        function setLoading(loading) {
+            sendButton.disabled = loading;
+            messageInput.disabled = loading;
+            sendButton.innerHTML = loading ? 
+                '<span>Sending...</span><span>⏳</span>' : 
+                '<span>Send</span><span>📤</span>';
+        }
+
+        function clearChat() {
+            // Confirm with user before clearing
+            if (confirm('Are you sure you want to clear the chat history? This action cannot be undone.')) {
+                // Clear all messages
+                messagesArea.innerHTML = '';
+                
+                // Recreate the welcome message with logos
+                const welcomeHTML = `
+                    <div class="welcome-message">
+                        <div class="welcome-logo">
+                            <img src="Cognizant_logo_with_Name.png" alt="Cognizant" class="welcome-cognizant-logo">
+                        </div>
+                        <h2>👋 Welcome to Your Onboarding Journey!</h2>
+                        <p>I'm your Employee Onboarding Assistant. I'm here to help you with policies, procedures, and any questions about your journey at Cognizant.</p>
+                        <p>You can ask me about:</p>
+                        <div class="quick-actions">
+                            <button class="quick-btn" onclick="sendQuickMessage('Tell me about dress code policy')">👔 Dress Code</button>
+                            <button class="quick-btn" onclick="sendQuickMessage('What are the leave policies?')">🏖️ Leave Policies</button>
+                            <button class="quick-btn" onclick="sendQuickMessage('Tell me about TruTime')">⏰ TruTime System</button>
+                            <button class="quick-btn" onclick="sendQuickMessage('Night shift allowance details')">🌙 Night Shift</button>
+                            <button class="quick-btn" onclick="sendQuickMessage('6th day allowance policy')">📅 6th Day Policy</button>
+                            <button class="quick-btn" onclick="sendQuickMessage('Work from home policy')">🏠 WFH Policy</button>
+                        </div>
+                        <p><em>✨ Ready to help you succeed at Cognizant!</em></p>
+                    </div>
+                `;
+                
+                messagesArea.innerHTML = welcomeHTML;
+                
+                // Generate new session ID
+                sessionId = 'web_' + Date.now();
+                
+                // Focus back to input
+                messageInput.focus();
+                
+                // Show success feedback
+                showTemporaryMessage('Chat cleared successfully! 🗑️ Welcome back!');
+                
+                // Scroll to top to show the welcome message properly
+                messagesArea.scrollTop = 0;
+            }
+        }
+
+        function showTemporaryMessage(message) {
+            const tempMessage = document.createElement('div');
+            tempMessage.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 25px;
+                font-weight: 600;
+                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+                z-index: 1000;
+                animation: fadeInOut 3s ease-in-out;
+            `;
+            tempMessage.textContent = message;
+            
+            // Add CSS animation
+            if (!document.querySelector('#tempMessageStyle')) {
+                const style = document.createElement('style');
+                style.id = 'tempMessageStyle';
+                style.textContent = `
+                    @keyframes fadeInOut {
+                        0% { opacity: 0; transform: translateY(-20px); }
+                        20% { opacity: 1; transform: translateY(0); }
+                        80% { opacity: 1; transform: translateY(0); }
+                        100% { opacity: 0; transform: translateY(-20px); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(tempMessage);
+            
+            // Remove after animation
+            setTimeout(() => {
+                if (tempMessage.parentNode) {
+                    tempMessage.parentNode.removeChild(tempMessage);
+                }
+            }, 3000);
+        }
+
+        // Event Handlers
+        chatForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage('user', message);
+            messageInput.value = '';
+            
+            // Show loading state
+            setLoading(true);
+            showTyping();
+            
+            try {
+                // Send message to API
+                const response = await sendMessage(message);
+                
+                // Hide typing and add assistant response
+                hideTyping();
+                addMessage('assistant', response.response, response.show_video);
+                
+            } catch (error) {
+                hideTyping();
+                addMessage('assistant', 'Sorry, I encountered an error while processing your request. Please try again.');
+                console.error('Chat Error:', error);
+            } finally {
+                setLoading(false);
+                messageInput.focus();
+            }
+        });
+
+        // Quick Actions
+        function sendQuickMessage(message) {
+            messageInput.value = message;
+            chatForm.dispatchEvent(new Event('submit'));
+        }
+
+        // Keyboard Shortcuts
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                chatForm.dispatchEvent(new Event('submit'));
+            }
+        });
+
+        // Auto-resize input (if needed for multi-line in future)
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Console welcome message
+        console.log(`
+🤖 Employee Onboarding Assistant - Web Interface
+🔗 Connected to: ${API_BASE}
+📱 Session ID: ${sessionId}
+🎯 Ready to help with your onboarding questions!
+        `);
+    </script>
+</body>
+</html> 
